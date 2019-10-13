@@ -1,4 +1,4 @@
-FROM mariadb:10.3
+FROM bitnami/mariadb:latest
 
-ADD /cine.sql /docker-entrypoint-initdb.d/cine.sql
-ADD /saitae.sql /docker-entrypoint-initdb.d/saitae.sql
+ENV MYSQL_DATABASE=cinedb
+ADD /cinedb.sql /docker-entrypoint-initdb.d/cinedb.sql
