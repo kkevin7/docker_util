@@ -11,7 +11,7 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - ./data:/data/db
+      - mongodb_data:/data/db
 
   mongo-express:
     image: mongo-express
@@ -21,3 +21,8 @@ services:
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: 12345
+    depends_on:
+      - mongo
+
+volumes:
+    mongodb_data:

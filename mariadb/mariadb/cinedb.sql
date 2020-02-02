@@ -21,8 +21,8 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `cinev2`
 --
-CREATE DATABASE IF NOT EXISTS `cinev2` DEFAULT CHARACTER SET utf8 COLLATE utf8_spanish_ci;
-USE `cinev2`;
+CREATE DATABASE IF NOT EXISTS `cine` DEFAULT CHARACTER SET utf8 COLLATE utf8_spanish_ci;
+USE `cine`;
 
 -- --------------------------------------------------------
 

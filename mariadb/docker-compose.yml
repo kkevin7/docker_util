@@ -16,6 +16,8 @@ services:
       - '3306:3306'
     volumes:
       - mariadb_data:/var/lib/mysql
+    networks:
+      - mariadb
 
   #Adminer
   adminer:
@@ -25,6 +27,8 @@ services:
     restart: always
     ports:
       - 9191:8080
+    networks:
+      - mariadb 
 
   # phpmyadmin
   phpmyadmin:
@@ -37,6 +41,12 @@ services:
     environment:
       PMA_HOST: db
       MYSQL_ROOT_PASSWORD: 12345
+    networks:
+      - mariadb
+
+networks:
+  mariadb:
+    driver: bridge
 
 volumes:
   mariadb_data:
