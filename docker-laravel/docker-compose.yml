@@ -11,14 +11,16 @@ services:
     volumes:
       - ./docker/ssl:/etc/apache2/ssl
       - ./:/var/www/html
+
   db:
     image: mysql:5.7
     restart: always
     ports:
       - "3306:3306"
     environment:
-      MYSQL_DATABASE: 'laraapp_db'
-      MYSQL_ALLOW_EMPTY_PASSWORD: 1
-      MYSQL_ROOT_PASSWORD: ""
+      - MYSQL_ROOT_PASSWORD=securerootpassword
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
     volumes:
-      - ./db:/var/lib/mysql
+      - ./volume/db:/var/lib/mysql
