@@ -1,0 +1,61 @@
+https://computingforgeeks.com/how-to-configure-mysql-8-0-master-slave-replication-on-ubuntu-18-04/
+
+sudo apt-get install -y mysql-server
+
+nano /etc/mysql/mysql.conf.d/mysqld.cnf
+
+bind-address = 192.168.16.3
+server-id = 1
+log-bin = /var/log/mysql/mysql-bin.log
+tmpdir = /tmp
+binlog_format = ROW
+max_binlog_size = 500M
+sync_binlog = 1
+expire-logs-days = 7
+slow_query_log
+skip-host-cache 
+skip-name-resolve 
+
+#sudo systemctl restart mysql
+sudo /etc/init.d/mysql restart 
+
+mysql -u root -p
+
+CREATE USER 'repl'@'192.168.16.2' IDENTIFIED BY 'slavepass';
+GRANT REPLICATION SLAVE ON *.* TO 'repl'@'192.168.16.2';
+flush privileges;
+show grants for 'repl'@192.168.16.2;
+
+-----------------------------------------------------------------------------------------
+
+sudo apt-get install -y mysql-server
+
+sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf
+
+bind-address = 192.168.16.2
+log_bin = /var/log/mysql/mysql-bin.log
+server-id = 2
+read_only = 1
+tmpdir = /tmp
+binlog_format = ROW
+max_binlog_size = 500M
+sync_binlog = 1
+expire-logs-days = 7
+slow_query_log   = 1
+
+/etc/init.d/mysql restart 
+
+mysql -u root -p
+
+show master status\G
+STOP SLAVE;
+CHANGE MASTER TO
+	MASTER_HOST='192.168.16.3',
+	MASTER_USER='repl',
+	MASTER_PASSWORD='slavepass',
+	MASTER_LOG_FILE='mysql-bin.000001',
+	MASTER_LOG_POS=334;
+START SLAVE;
+show slave status\G
+
+CREATE TABLE test1 (name VARCHAR(10));

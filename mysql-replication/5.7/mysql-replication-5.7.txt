@@ -1,0 +1,57 @@
+https://www.opsdash.com/blog/mysql-replication-howto.html
+https://hevodata.com/learn/mysql-master-slave-replication/
+
+nano /etc/mysql/mysql.conf.d/mysqld.cnf
+
+bind-address = 172.25.0.3
+server-id = 1
+log_bin = /var/log/mysql/mysql-bin.log
+skip-host-cache 
+skip-name-resolve 
+
+#sudo systemctl restart mysql
+sudo /etc/init.d/mysql restart 
+
+mysql -u root -p
+
+CREATE USER 'repl'@'172.25.0.2' IDENTIFIED BY 'slavepass';
+GRANT REPLICATION SLAVE ON *.* TO 'repl'@'172.25.0.2';
+FLUSH TABLES WITH READ LOCK;
+SHOW MASTER STATUS;
+USE pepe1
+FLUSH TABLES WITH READ LOCK; 
+EXIT
+
+mysqldump -u root -p pepe1 > pepe1.sql  
+
+mysql -u root -p
+USE pepe1;
+UNLOCK TABLES;
+EXIT;
+
+-----------------------------------------------------------------------------------------
+
+mysql –u root –p pepe1 < pepe1.sql 
+
+bind-address = 172.25.0.2
+server-id = 2
+log_bin = /var/log/mysql/mysql-bin.log
+replicate-do-db =pepe1
+skip-host-cache 
+skip-name-resolve  
+
+/etc/init.d/mysql restart 
+
+mysql -u root -p
+
+STOP SLAVE;
+CHANGE MASTER TO
+	MASTER_HOST='172.25.0.3',
+	MASTER_USER='repl',
+	MASTER_PASSWORD='slavepass',
+	MASTER_LOG_FILE='mysql-bin.000001',
+	MASTER_LOG_POS=613;
+START SLAVE;
+
+
+CREATE TABLE test1 (name VARCHAR(10));

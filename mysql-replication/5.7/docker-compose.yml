@@ -1,0 +1,48 @@
+version: '3.9'
+
+services:
+  mysql-db1:
+    container_name: mysql-db1
+    restart: always 
+    build:
+      context: '.'
+      dockerfile: ./mysql/Dockerfile
+    ports:
+       - '9911:3306'
+    volumes:
+      - ./volumes/db1/run2/var:/var/lib/mysql
+      - ./backup:/backup
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345
+      - MYSQL_DATABASE=pepe1
+      - MYSQL_USER=mortal2021
+      - MYSQL_PASSWORD=mortal2021
+    networks:
+      backend:
+        aliases:
+          - mysql-replication
+
+  mysql-db2:
+    restart: always 
+    container_name: mysql-db2
+    build:
+      context: '.'
+      dockerfile: ./mysql/Dockerfile
+    ports:
+       - '9912:3306'
+    volumes:
+      - ./volumes/db2/run/var:/var/lib/mysql
+      - ./backup:/backup
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345
+      - MYSQL_DATABASE=pepe1
+      - MYSQL_USER=mortal2021
+      - MYSQL_PASSWORD=mortal2021
+    networks:
+      backend:
+        aliases:
+          - mysql-replication
+
+networks:
+  backend:
+    name: mysql-replication
