@@ -1,4 +1,5 @@
 version: "3.9"
+
 services:
   #mysql
   db:
@@ -8,7 +9,7 @@ services:
       - "3306:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=12345
-      - MYSQL_DATABASE=97tools
+      - MYSQL_DATABASE=my_database_name
     volumes:
       - mysql_data:/var/lib/mysql
       - ./volume/mysql_conf:/etc/mysql/conf.d

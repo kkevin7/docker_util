@@ -1,0 +1,20 @@
+version: '3.5'
+
+services:
+  
+  sqlserver:
+    container_name: sqlserver-db
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      - SA_PASSWORD=Pass@word
+      - ACCEPT_EULA=Y
+      - MSSQL_PID=Developer
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql/data
+      - sqlserver-secrets:/var/opt/mssql/secrets
+
+volumes:
+  sqlserver-data:
+  sqlserver-secrets:

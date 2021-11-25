@@ -12,5 +12,8 @@ docker rmi $(docker images -q)
 #mostrar volumenes
 docker volume ls
 
+#ELiminar volumenes
+docker volume rm $(docker volume ls)
+
 #Eliminar imagenes sin utilizar
-docker rmi $(docker images --filter "dangling=true" -q --no-trunc) 
+#docker rmi $(docker images --filter "dangling=true" -q --no-trunc) 
