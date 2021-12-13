@@ -1,52 +1,39 @@
 version: '3.5'
 
 services:
-  #MariaDB
-  db:
-    build: ./mariadb/.
-    image: 'own_mariadb'
-    container_name: "own_mariadb"
-    #command: --default-authentication-plugin=mysql_native_password
+
+  mariadb:
+    image: "mariadb"
     restart: always
     environment:
       - MARIADB_ROOT_PASSWORD=12345
-      - MARIADB_USER=mortal
+      - MARIADB_USER=user
       - MARIADB_PASSWORD=12345
     ports:
-      - '3306:3306'
+      - '3307:3306'
     volumes:
       - mariadb_data:/var/lib/mysql
+      - mariadb_conf:/etc/mysql
     networks:
-      - mariadb
-
-  #Adminer
-  adminer:
-    depends_on:
-      - db
-    image: adminer
-    restart: always
-    ports:
-      - 9191:8080
-    networks:
-      - mariadb 
+      - mariadb_net
 
   # phpmyadmin
   phpmyadmin:
     depends_on:
-      - db
+      - mariadb
     image: phpmyadmin/phpmyadmin
     restart: always
     ports:
-      - '9292:80'
+      - '9393:80'
     environment:
-      PMA_HOST: db
+      PMA_HOST: mariadb
       MYSQL_ROOT_PASSWORD: 12345
     networks:
-      - mariadb
+      - mariadb_net
 
 networks:
-  mariadb:
-    driver: bridge
+  mariadb_net:
 
 volumes:
-  mariadb_data:
+  mariadb_data: null
+  mariadb_conf: null
