@@ -1,51 +1,41 @@
-version: '3.5'
+version: '3.7'
 services:
-#  Create a service named db.
+
   psql:
-    build: ./postgres/.
-#   Use the Docker Image postgres. This will pull the newest release.
-    image: "own_postgres"
-#   Give the container the name my_postgres. You can changes to something else.
-    container_name: "own_postgres"
-#   Setup the username, password, and database name. You can changes these values.
+    image: postgres:10.5
+    restart: always
     environment:
-      - POSTGRES_USER=mortal
+      - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=12345
-#      - POSTGRES_DB=mydb
-#   Maps port 54320 (localhost) to port 5432 on the container. You can change the ports to fix your needs.
     ports:
       - "5432:5432"
-#   Set a volume some that database is not lost after shutting down the container.
-#   I used the name postgres-data but you can changed it to something else.
     volumes:
-      - postgres:/data/postgres
-#      - ./postgres-data:/var/lib/postgresql/data
+     - postgres_data:/var/lib/postgresql/data
     networks:
       - postgres
-    restart: unless-stopped
 
   pgadmin:
     image: "dpage/pgadmin4"
+    restart: always
     container_name: "pgadmin4"
     environment:
       PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
       PGADMIN_DEFAULT_PASSWORD: admin
-    volumes:
-#       - pgadmin:/root/.pgadmin
-      - pgadmin:/var/lib/postgresql/data
     ports:
       - "9595:80"
+    volumes:
+      - pgadmin_data:/var/lib/postgresql/data
+    
     networks:
       - postgres
-    restart: unless-stopped
 
 networks:
   postgres:
     driver: bridge
 
 volumes:
-    postgres:
-    pgadmin:
+    postgres_data:
+    pgadmin_data:
 
 
 

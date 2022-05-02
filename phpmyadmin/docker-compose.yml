@@ -1,0 +1,12 @@
+version: "3.7"
+
+services:
+
+# phpmyadmin
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - '9666:80'
+    environment:
+      - PMA_ARBITRARY=1
