@@ -1,0 +1,44 @@
+services:
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n
+    restart: always
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=admin
+      - N8N_BASIC_AUTH_PASSWORD=12345
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - NODE_ENV=production
+      - NODE_FUNCTION_ALLOW_EXTERNAL=axios,qs
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres_db
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=n8n_db
+      - DB_POSTGRESDB_USER=postgres
+      - DB_POSTGRESDB_PASSWORD=12345
+    volumes:
+      - ./n8n_data:/home/node/.n8n
+    networks:
+      - postgres_net
+    depends_on:
+      - postgres_db
+
+  postgres_db:
+    image: postgres:15
+    container_name: postgres_db
+    restart: always
+    environment:
+      - POSTGRES_DB=n8n_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=12345
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    networks:
+      - postgres_net
+
+networks:
+  postgres_net:
