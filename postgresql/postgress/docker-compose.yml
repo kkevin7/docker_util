@@ -1,0 +1,41 @@
+version: '3.7'
+services:
+
+  psql:
+    image: postgres:10.5
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=12345
+    ports:
+      - "5432:5432"
+    volumes:
+     - postgres_data:/var/lib/postgresql/data
+    networks:
+      - postgres
+
+  pgadmin:
+    image: "dpage/pgadmin4"
+    restart: always
+    container_name: "pgadmin4"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "9595:80"
+    volumes:
+      - pgadmin_data:/var/lib/postgresql/data
+    
+    networks:
+      - postgres
+
+networks:
+  postgres:
+    driver: bridge
+
+volumes:
+    postgres_data:
+    pgadmin_data:
+
+
+
